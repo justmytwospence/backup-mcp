@@ -1,0 +1,31 @@
+# Run backup-mcp next to an offen/docker-volume-backup container named `backup` (and,
+# optionally, a stack-back container). The server reaches Docker only through the socket
+# proxy below, which allows the containers and exec endpoints and nothing else (no images,
+# volumes, networks, system). Note what exec into the backup container means: that
+# container holds the Docker socket, so the real limit is this server's interface (fixed
+# commands, job names looked up in conf.d). Keep it on a private network.
+services:
+  backup-mcp:
+    image: ghcr.io/justmytwospence/backup-mcp:0
+    restart: unless-stopped
+    environment:
+      DOCKER_HOST: tcp://backup-mcp-docker:2375
+      CONF_DIR: /conf.d
+      STACK_BACK: "false"
+      MCP_ALLOWED_HOSTS: backup-mcp
+      # Optional: where to resolve backup incidents after a successful run.
+      # NOTIFY_URL: http://n8n:5678/webhook/notify
+      # NOTIFY_TOKEN: ...
+    volumes:
+      - ./conf.d:/conf.d:ro
+    depends_on: [backup-mcp-docker]
+
+  backup-mcp-docker:
+    image: ghcr.io/tecnativa/docker-socket-proxy:v0.5.0
+    restart: unless-stopped
+    environment:
+      CONTAINERS: 1
+      EXEC: 1
+      POST: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
