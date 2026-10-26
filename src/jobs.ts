@@ -21,8 +21,9 @@ export interface StackBackJob {
 }
 export type Job = OffenJob | StackBackJob;
 
-const CONF_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]*\.conf$/;
-const JOB_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]{0,62}$/;
+// (?![\s\S]) is a strict end: unlike $, it cannot match before a final newline.
+const CONF_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]*\.conf(?![\s\S])/;
+export const JOB_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]{0,62}(?![\s\S])/;
 const KEY = /^[A-Z_][A-Z0-9_]*$/;
 
 /**

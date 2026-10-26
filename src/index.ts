@@ -14,7 +14,7 @@ import { createServer, SERVER_NAME, VERSION } from "./server.js";
 const transport = (process.env.MCP_TRANSPORT ?? "http").toLowerCase();
 
 if (transport === "stdio") {
-  serveStdio(createServer);
+  serveStdio(() => createServer());
   console.error(`${SERVER_NAME} ${VERSION} running via stdio`);
 } else if (transport === "http") {
   const port = Number(process.env.PORT ?? 8000);
@@ -25,7 +25,7 @@ if (transport === "stdio") {
     .filter(Boolean);
   const allowedHosts = extraHosts.length ? ["localhost", "127.0.0.1", ...extraHosts] : undefined;
 
-  const handler = createMcpHandler(createServer);
+  const handler = createMcpHandler(() => createServer());
   const app = createMcpHonoApp({ host: "0.0.0.0", allowedHosts });
   app.get("/health", (c) => c.json({ status: "ok", name: SERVER_NAME, version: VERSION }));
   const mcp = (c: Context) => handler.fetch(c.req.raw, { parsedBody: c.get("parsedBody") });
