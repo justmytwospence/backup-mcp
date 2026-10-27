@@ -103,3 +103,7 @@ containers, provider accounts or notifications. CI and the release workflow run 
 before publishing an image.
 
 Push a `vX.Y.Z` tag to publish `ghcr.io/justmytwospence/backup-mcp:X.Y.Z`, `:X.Y` and `:X`.
+
+## License
+
+MIT, see [LICENSE](LICENSE).

@@ -2,6 +2,7 @@
   "name": "backup-mcp",
   "version": "0.2.0",
   "description": "MCP server that re-runs docker-volume-backup and stack-back jobs on demand, and nothing else",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
